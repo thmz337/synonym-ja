@@ -9,7 +9,6 @@ import { get, all } from "./node_sqlite3_wrapper.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const dbPath = __dirname + "/../db/wnjpn.db";
-console.log(__dirname);
 
 const db = new sqlite3.Database(dbPath);
 const argv = minimist(process.argv.slice(2));
