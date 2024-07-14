@@ -6,6 +6,10 @@
     "fix": "prettier --write . && eslint --fix .",
     "lint": "prettier --check . && eslint ."
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thmz337/synonym-ja.git"
+  },
   "bin": {
     "synja": "src/index.js"
   },
@@ -21,7 +25,7 @@
     "minimist": "^1.2.8"
   },
   "type": "module",
-  "author": "",
+  "author": "thmz337",
   "license": "ISC",
-  "description": ""
+  "description": "類義語検索コマンド"
 }
