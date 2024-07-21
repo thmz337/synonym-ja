@@ -91,7 +91,7 @@ async function getSynonyms(synSetWord, wordID) {
     { $synset: synSetWord, $wordid: wordID },
   );
 
-  return synonyms.map((synonym) => synonym["wordid"]);
+  return synonyms.map(({ wordid }) => wordid);
 }
 
 async function getWordFromID(wordID) {
