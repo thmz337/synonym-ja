@@ -39,7 +39,7 @@ const synsetWords = await Promise.all(
 );
 
 const synonymsIDs = await Promise.all(
-  synsetWords.map((synsetWord) => getSynonyms(synsetWord["synset"], wordID)),
+  synsetWords.map(({ synset }) => getSynonyms(synset, wordID)),
 );
 
 const synonyms = await Promise.all(
