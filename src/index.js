@@ -33,10 +33,10 @@ const synonymObjs = synsetWords.map((synsetWord, idx) => {
 if (argv.j) {
   console.log(JSON.stringify(synonymObjs));
 } else {
-  synonymObjs.forEach((obj) => {
-    console.log(`概念: ${obj.name}`);
-    console.log(`定義: ${obj.def}`);
-    obj.synonyms.forEach((synonym) => {
+  synonymObjs.forEach(({ name, def, synonyms }) => {
+    console.log(`概念: ${name}`);
+    console.log(`定義: ${def}`);
+    synonyms.forEach((synonym) => {
       console.log(`類義語: ${synonym}`);
     });
     console.log();
