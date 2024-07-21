@@ -28,7 +28,7 @@ const wordID = wordIDObject["wordid"];
 
 const synsets = await all(
   db,
-  "SELECT synset FROM sense WHERE wordid = ?",
+  "SELECT synset FROM sense WHERE wordid = ? ORDER BY synset",
   wordID,
 );
 
