@@ -6,9 +6,9 @@ import minimist from "minimist";
 import sqlite3 from "sqlite3";
 import { get, all } from "./node_sqlite3_wrapper.js";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const dbPath = __dirname + "/../db/wnjpn.db";
+const filename = fileURLToPath(import.meta.url);
+const dirname = path.dirname(filename);
+const dbPath = dirname + "/../db/wnjpn.db";
 
 const db = new sqlite3.Database(dbPath);
 const argv = minimist(process.argv.slice(2));
