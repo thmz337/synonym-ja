@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 import path from "node:path";
 import minimist from "minimist";
 import sqlite3 from "sqlite3";
-import { get, all } from "./node_sqlite3_wrapper.js";
+import WordDB from "./word_db.js";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -18,36 +18,10 @@ if (argv._.length === 0) {
   process.exit(0);
 }
 
-const wordIDObject = await get(
-  db,
-  "SELECT wordid FROM word WHERE lemma = ?",
-  argv._[0],
-);
-
-const wordID = wordIDObject["wordid"];
-
-const synsets = await all(
-  db,
-  "SELECT synset FROM sense WHERE wordid = ? ORDER BY synset",
-  wordID,
-);
-
-const synsetWords = await Promise.all(
-  synsets.map((synset) => {
-    return getWordFromSynset(synset);
-  }),
-);
-
-const synonymsIDs = await Promise.all(
-  synsetWords.map(({ synset }) => getSynonyms(synset, wordID)),
-);
-
-const synonyms = await Promise.all(
-  synonymsIDs.map(
-    async (synonym) =>
-      await Promise.all(synonym.map((wordID) => getWordFromID(wordID))),
-  ),
-);
+const wordDB = new WordDB(db);
+const wordID = await wordDB.wordID(argv._[0]);
+const synsetWords = await wordDB.synsetWords(wordID);
+const synonyms = await wordDB.synonyms(synsetWords, wordID);
 
 const synonymObjs = synsetWords.map((synsetWord, idx) => {
   return {
@@ -67,33 +41,4 @@ if (argv.j) {
     });
     console.log();
   });
-}
-
-async function getWordFromSynset(synSet) {
-  const syn = await get(
-    db,
-    "SELECT name FROM synset WHERE synset = ?",
-    synSet["synset"],
-  );
-  const def = await get(
-    db,
-    "SELECT def FROM synset_def WHERE (synset = ? and lang = 'jpn')",
-    synSet["synset"],
-  );
-
-  return { ...synSet, ...syn, ...def };
-}
-
-async function getSynonyms(synSetWord, wordID) {
-  const synonyms = await all(
-    db,
-    "SELECT wordid FROM sense WHERE (synset = $synset AND wordid != $wordid)",
-    { $synset: synSetWord, $wordid: wordID },
-  );
-
-  return synonyms.map(({ wordid }) => wordid);
-}
-
-async function getWordFromID(wordID) {
-  return await get(db, "SELECT lemma FROM word WHERE wordid = ?", wordID);
 }
