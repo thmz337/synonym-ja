@@ -51,7 +51,7 @@ export default class WordDB {
     );
     const def = await get(
       this.db,
-      "SELECT def FROM synset_def WHERE (synset = ? and lang = 'jpn')",
+      "SELECT def FROM synset_def WHERE (synset = ? AND lang = 'jpn')",
       synSet["synset"],
     );
 
@@ -61,7 +61,7 @@ export default class WordDB {
   async #getSynonyms(synSetWord, wordID) {
     const synonyms = await all(
       this.db,
-      "SELECT wordid FROM sense WHERE (synset = $synset AND wordid != $wordid)",
+      "SELECT wordid FROM sense WHERE (synset = $synset AND wordid <> $wordid)",
       { $synset: synSetWord, $wordid: wordID },
     );
 
